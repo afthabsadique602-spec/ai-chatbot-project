@@ -48,5 +48,10 @@ AI-style chatbot interface
 Chatbot UI with real-time responses and recommendations.
 
 ---
+📱 Progressive Web App (PWA)
+
+- Installable on mobile and desktop
+- Works like a native app
+- Fast loading and responsive design
 
 ✨ This project demonstrates building interactive AI-style applications using Python and Flask.
