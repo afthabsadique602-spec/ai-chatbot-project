@@ -428,8 +428,11 @@
             }
         }
 
+        let chatHistory = [];
+
         function clearChat() {
             messagesContainer.innerHTML = '';
+            chatHistory = []; // Reset memory
             addMessage(INITIAL_GREETING, "bot", false);
         }
 
@@ -446,6 +449,9 @@
             addMessage(message, "user", false);
             inputField.value = "";
             
+            // Add user message to history
+            chatHistory.push({role: "user", content: message});
+            
             // Add bouncing dots typing indicator
             const indicator = createTypingIndicator();
             messagesContainer.appendChild(indicator);
@@ -458,7 +464,7 @@
                 let res = await fetch("/chat", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({message: message})
+                    body: JSON.stringify({messages: chatHistory})
                 });
 
                 let data = await res.json();
@@ -466,6 +472,8 @@
                 // Add streaming typewriter bot response
                 if (data.reply) {
                     await addMessage(data.reply, "bot", true);
+                    // Add AI reply to history
+                    chatHistory.push({role: "assistant", content: data.reply});
                 } else {
                     await addMessage("Oops! I dropped a book. It seems there's an error.", "bot", true);
                 }
