@@ -8,14 +8,14 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Initialize the OpenAI client but point it to Google's Free Gemini API
-raw_key = os.environ.get("GEMINI_API_KEY", "")
+# Initialize the OpenAI client but point it to Groq's ultra-fast API!
+raw_key = os.environ.get("GROQ_API_KEY", "")
 # Strip whitespace and any stray quotes that might have been accidentally pasted
 clean_key = raw_key.strip().strip("'").strip('"')
 
 client = OpenAI(
     api_key=clean_key,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+    base_url="https://api.groq.com/openai/v1"
 )
 
 @app.route("/")
@@ -38,9 +38,9 @@ def chat():
         return jsonify({"reply": "Please provide a message."}), 400
 
     try:
-        # Using Google Gemini's extremely fast and free model!
+        # Using Groq's extremely fast and free Llama 3 model!
         response = client.chat.completions.create(
-            model="gemini-2.0-flash",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {
                     "role": "system",
