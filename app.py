@@ -9,8 +9,12 @@ load_dotenv()
 app = Flask(__name__)
 
 # Initialize the OpenAI client but point it to Google's Free Gemini API
+raw_key = os.environ.get("GEMINI_API_KEY", "")
+# Strip whitespace and any stray quotes that might have been accidentally pasted
+clean_key = raw_key.strip().strip("'").strip('"')
+
 client = OpenAI(
-    api_key=os.environ.get("GEMINI_API_KEY"),
+    api_key=clean_key,
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
@@ -51,7 +55,8 @@ def chat():
 
     except Exception as e:
         print(f"Error communicating with AI: {e}")
-        return jsonify({"reply": "Sorry, I'm currently unable to connect to my brain. Please make sure the GEMINI_API_KEY is correctly set in your .env file!"})
+        # If the API key is invalid or rate limited, this will show the exact reason.
+        return jsonify({"reply": f"Sorry, my brain disconnected. Error details: {str(e)}"})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
